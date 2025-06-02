@@ -29,9 +29,33 @@
 		8CF1DA1C2DE9A32D002BCAA2 /* TryFitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TryFitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		8C91040D2DEDDEB300009A07 /* Exceptions for "TryFit" folder in "TryFit" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Model/APIError.swift,
+			);
+			target = 8CF1DA012DE9A329002BCAA2 /* TryFit */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		8C91040E2DEDDEB300009A07 /* Exceptions for "TryFit" folder in "Copy Bundle Resources" phase from "TryFit" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 8CF1DA002DE9A329002BCAA2 /* Resources */;
+			membershipExceptions = (
+				Model/APIError.swift,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		8CF1DA042DE9A329002BCAA2 /* TryFit */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8C91040D2DEDDEB300009A07 /* Exceptions for "TryFit" folder in "TryFit" target */,
+				8C91040E2DEDDEB300009A07 /* Exceptions for "TryFit" folder in "Copy Bundle Resources" phase from "TryFit" target */,
+			);
 			path = TryFit;
 			sourceTree = "<group>";
 		};
@@ -396,6 +420,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TryFit/Preview Content\"";
+				DEVELOPMENT_TEAM = XNB2UXNMVA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -424,6 +449,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TryFit/Preview Content\"";
+				DEVELOPMENT_TEAM = XNB2UXNMVA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

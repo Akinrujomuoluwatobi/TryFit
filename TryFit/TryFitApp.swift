@@ -11,7 +11,7 @@ import SwiftUI
 struct TryFitApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            StoreHomeView()
         }
     }
 }
