@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct StoreView: View {
+    
+    @State private var storeViewModel = StoreViewModel()
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -59,19 +61,18 @@ struct StoreView: View {
                         .font(.headline)
                         .padding(.horizontal)
                         .padding(.top)
-                    
-                    LazyVGrid(columns: [GridItem(), GridItem()]) {
-                        ForEach(["Dresses", "Tops", "Bottoms", "Outerwear", "Accessories", "Shoes"], id: \.self) { category in
-                            VStack {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color(.systemGray5))
-                                    .frame(height: 180)
-                                Text(category)
+                    if let cloths = storeViewModel.cloths {
+                        LazyVGrid(columns: [GridItem(), GridItem()]) {
+                            ForEach(cloths) { category in
+                                CategoryItemView(cloth: category)
+                                    .padding(5)
                             }
-                            .padding(5)
                         }
+                        .padding(.horizontal)
+                    } else {
+                        ProgressView("Loading...")
                     }
-                    .padding(.horizontal)
+                    
                 }
                 
             }

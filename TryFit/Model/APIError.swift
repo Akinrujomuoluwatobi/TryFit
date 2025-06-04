@@ -13,6 +13,7 @@ enum APIError: Error {
     case requestFailed(description: String)
     case invalidStatusCode(statusCode: Int)
     case unknownError(error: Error)
+    case invalidResponse
     
     var customDescription: String {
         switch self {
@@ -21,6 +22,7 @@ enum APIError: Error {
         case let .requestFailed(description): return "Failed Request: \(description)"
         case let .invalidStatusCode(statusCode): return "Invalid Status Code: \(statusCode)"
         case let .unknownError(error): return "Unknown Error Occured: \(error.localizedDescription)"
+        case .invalidResponse: return "Invalid response from server."
         }
     }
 }

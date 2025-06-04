@@ -8,22 +8,19 @@
 import Foundation
 
 protocol StoreService {
-    func fetchCloths(completion: @escaping(Result<[ClothModel], APIError>) -> Void)
+    func fetchCloths() async -> Result<[ClothModel], APIError>
 }
 
 class DefaultStoreService: StoreService {
-    
     var httpManager: HTTPNetworkManager
     
     init(httpManager: DefaultHTTPNetworkManager = DefaultHTTPNetworkManager()) {
         self.httpManager = httpManager
     }
-    
-    func fetchCloths(completion: @escaping(Result<[ClothModel], APIError>) -> Void) {
+
+    func fetchCloths() async ->  Result<[ClothModel], APIError>{
         let urlString = ""
-        httpManager.makeNetworkRequest(urlString: urlString, type: [ClothModel].self) { result in
-            completion(result)
-        }
+        return await httpManager.makeNetworkRequest(urlString: urlString, type: [ClothModel].self)
     }
     
 }
