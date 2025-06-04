@@ -8,17 +8,17 @@ import SwiftUI
 
 
 struct CategoryItemView: View {
-    let cloth: ClothModel
+    let clothModel: ClothModel
     @State private var loaded = false
     
     var body: some View {
         VStack {
-            AsyncImage(url: URL(string: cloth.imageUrl)) { phase in
+            AsyncImage(url: URL(string: clothModel.imgURL)) { phase in
                 if let image = phase.image {
                     image
                         .resizable()
                         .scaledToFill()
-                        .frame(height: 100)
+                        .frame(height: 150)
                         .clipped()
                         .cornerRadius(10)
                         .opacity(loaded ? 1 : 0)
@@ -26,14 +26,14 @@ struct CategoryItemView: View {
                         .onAppear { loaded = true }
                 } else if phase.error != nil {
                     Color.gray
-                        .frame(height: 100)
+                        .frame(height: 150)
                         .cornerRadius(10)
                 } else {
                     ProgressView()
-                        .frame(height: 100)
+                        .frame(height: 150)
                 }
             }
-            Text(cloth.name)
+            Text(clothModel.fileName)
         }
         .padding(5)
     }

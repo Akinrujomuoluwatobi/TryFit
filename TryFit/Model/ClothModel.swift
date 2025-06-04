@@ -6,8 +6,14 @@
 //
 import Foundation
 
-class ClothModel: Codable, Identifiable {
+// MARK: - ClothModelElement
+struct ClothModel: Codable, Identifiable {
     let id = UUID()
-    var imageUrl: String
-    var name: String
+    let imgURL: String
+    let fileName: String
+
+    enum CodingKeys: String, CodingKey {
+        case imgURL = "img_url"
+        case fileName = "file_name"
+    }
 }

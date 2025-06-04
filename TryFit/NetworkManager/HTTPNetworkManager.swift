@@ -43,6 +43,11 @@ class DefaultHTTPNetworkManager: HTTPNetworkManager {
         
         do {
             let data = try await requestManager.requestData(from: url)
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("Response Body:\n\(responseString)")
+            } else {
+                print("Received data but couldn't decode as UTF-8 string.")
+            }
             let decoded = try JSONDecoder().decode(T.self, from: data)
             return .success(decoded)
         } catch let decodingError as DecodingError {

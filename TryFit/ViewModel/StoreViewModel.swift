@@ -13,17 +13,19 @@ class StoreViewModel: ObservableObject {
     
     @Published var cloths: [ClothModel]?
     @Published var errorMessage: String?
+    @Published var showError = false
 
     private let service: StoreService = DefaultStoreService()
 
-    func loadUser() async {
-
+    func fetchCloths() async {
         let result = await service.fetchCloths()
         switch result {
         case .success(let cloths):
             self.cloths = cloths
         case .failure(let error):
-            self.errorMessage = error.localizedDescription
+            self.showError = true
+            self.errorMessage = error.customDescription
+            
         }
     }
 }
