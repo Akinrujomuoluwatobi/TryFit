@@ -8,22 +8,39 @@
 import SwiftUI
 
 struct ClothDetailView: View {
+    var clothModel: ClothModel
     let sizes = ["XS", "S", "M", "L", "XL"]
+    @State private var loaded = false
+    
+    @State private var selectedImage: UIImage?
+    @State private var showImagePicker = false
+    @State private var showSheet = false
+    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                Image(systemName: "chevron.left")
-                    .padding()
-                Spacer()
-            }
             
             Spacer()
-            Image(systemName: "person.fill") // Placeholder for dress preview
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 300)
-                .padding(.top, 20)
+            AsyncImage(url: URL(string: clothModel.imgURL)) { phase in
+                if let image = phase.image {
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 400)
+                        .clipped()
+                        .cornerRadius(10)
+                        .opacity(loaded ? 1 : 0)
+                        .animation(.easeIn(duration: 0.5), value: loaded)
+                        .onAppear { loaded = true }
+                } else if phase.error != nil {
+                    Color.gray
+                        .frame(height: 300)
+                        .cornerRadius(10)
+                } else {
+                    ProgressView()
+                        .frame(height: 300)
+                }
+            }.padding(.top, 40)
             
             VStack(alignment: .leading, spacing: 8) {
                 Text("Floral Print Maxi Dress")
@@ -47,7 +64,11 @@ struct ClothDetailView: View {
                     }
                 }
                 
-                Button(action: {}) {
+                Spacer()
+                
+                Button(action: {
+                    showSheet = true
+                }) {
                     Text("Try it on")
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -58,13 +79,24 @@ struct ClothDetailView: View {
                 .padding(.top)
             }
             .padding()
-            
-            Spacer()
-            TabBarView()
+            .confirmationDialog("Select Image Source", isPresented: $showSheet, titleVisibility: .visible) {
+                Button("Camera") {
+                    sourceType = .camera
+                    showImagePicker = true
+                }
+                Button("Gallery") {
+                    sourceType = .photoLibrary
+                    showImagePicker = true
+                }
+                Button("Cancel", role: .cancel) { }
+            }
+            .sheet(isPresented: $showImagePicker) {
+                ImagePicker(sourceType: sourceType, selectedImage: $selectedImage)
+            }
         }
     }
 }
 
 #Preview {
-    ClothDetailView()
+    ClothDetailView(clothModel: ClothModel(imgURL: "", fileName: ""))
 }

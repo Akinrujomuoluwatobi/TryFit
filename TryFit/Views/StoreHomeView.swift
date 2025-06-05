@@ -19,13 +19,14 @@ struct StoreHomeView: View {
             Text("Favourites")
                 .tabItem {
                     Label("favourites", systemImage: "heart.fill")
+                        .foregroundStyle(Color.pink)
                 }
             
             Text("Profiles")
                 .tabItem {
                     Label("profile", systemImage: "person")
                 }
-        }
+        }.accentColor(Color.pink)
     }
 }
 

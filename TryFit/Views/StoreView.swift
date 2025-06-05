@@ -12,80 +12,84 @@ struct StoreView: View {
     @StateObject private var storeViewModel = StoreViewModel()
     
     var body: some View {
-        ZStack {
-            ScrollView {
-                VStack(spacing: 0) {
-                    HStack {
-                        Text("Shop")
-                            .font(.title)
-                            .bold()
-                        Spacer()
-                        Image(systemName: "slider.horizontal.3")
-                    }
-                    .padding()
-                    
-                    SearchBarView()
-                    
-                    Spacer()
-                    
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 10) {
-                            ForEach(["All", "Dresses", "Tops", "Bottoms", "Outerwear"], id: \.self) { category in
-                                Text(category)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 8)
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(20)
-                            }
+        NavigationStack {
+            ZStack {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        HStack {
+                            Text("Shop")
+                                .font(.title)
+                                .bold()
+                            Spacer()
+                            Image(systemName: "slider.horizontal.3")
                         }
-                        .padding(.horizontal)
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .leading) {
-                        Text("Featured")
-                            .font(.headline)
-                            .padding(.horizontal)
+                        .padding()
+                        
+                        SearchBarView()
+                        
+                        Spacer()
+                        
                         ScrollView(.horizontal, showsIndicators: false) {
-                            HStack {
-                                ForEach(["New Arrivals", "Summer Collection"], id: \.self) { title in
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color(.systemGray5))
-                                        .frame(width: 140, height: 180)
-                                        .overlay(Text(title).padding(.bottom, 10), alignment: .bottom)
+                            HStack(spacing: 10) {
+                                ForEach(["All", "Dresses", "Tops", "Bottoms", "Outerwear"], id: \.self) { category in
+                                    Text(category)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 8)
+                                        .background(Color.gray.opacity(0.2))
+                                        .cornerRadius(20)
                                 }
                             }
                             .padding(.horizontal)
                         }
                         
-                        Text("Categories")
-                            .font(.headline)
-                            .padding(.horizontal)
-                            .padding(.top)
-                        if let cloths = storeViewModel.cloths {
-                            LazyVGrid(columns: [GridItem(), GridItem()]) {
-                                ForEach(cloths) { clothModel in
-                                    CategoryItemView(clothModel: clothModel)
-                                        .padding(5)
+                        Spacer()
+                        
+                        VStack(alignment: .leading) {
+                            Text("Featured")
+                                .font(.headline)
+                                .padding(.horizontal)
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack {
+                                    ForEach(["New Arrivals", "Summer Collection"], id: \.self) { title in
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .fill(Color(.systemGray5))
+                                            .frame(width: 140, height: 180)
+                                            .overlay(Text(title).padding(.bottom, 10), alignment: .bottom)
+                                    }
                                 }
+                                .padding(.horizontal)
                             }
-                            .padding(.horizontal)
-                        } else {
-                            ProgressView("Loading...")
-                                .frame(maxWidth: .infinity)
+                            
+                            Text("Categories")
+                                .font(.headline)
+                                .padding(.horizontal)
+                                .padding(.top)
+                            if let cloths = storeViewModel.cloths {
+                                LazyVGrid(columns: [GridItem(), GridItem()]) {
+                                    ForEach(cloths) { clothModel in
+                                        NavigationLink(destination: ClothDetailView(clothModel: clothModel)) {
+                                            CategoryItemView(clothModel: clothModel)
+                                                .padding(5)
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal)
+                            } else {
+                                ProgressView("Loading...")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            
                         }
                         
                     }
                     
                 }
-                
-            }
-        }.task {
-            await storeViewModel.fetchCloths()
-        }.sheet(isPresented: $storeViewModel.showError) {
-            ErrorSheetView(message: storeViewModel.errorMessage ?? "") {
-                storeViewModel.showError = false
+            }.task {
+                await storeViewModel.fetchCloths()
+            }.sheet(isPresented: $storeViewModel.showError) {
+                ErrorSheetView(message: storeViewModel.errorMessage ?? "") {
+                    storeViewModel.showError = false
+                }
             }
         }
     }

@@ -19,7 +19,7 @@ class DefaultStoreService: StoreService {
     }
 
     func fetchCloths() async ->  Result<[ClothModel], APIError>{
-        let urlString = "https://daec-35-240-133-199.ngrok-free.app/images"
+        let urlString = "\(Constants.shared.BASE_URL)/images"
         return await httpManager.makeNetworkRequest(urlString: urlString, type: [ClothModel].self)
     }
     
