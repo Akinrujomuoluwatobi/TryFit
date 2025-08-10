@@ -12,10 +12,12 @@ struct ClothDetailView: View {
     let sizes = ["XS", "S", "M", "L", "XL"]
     @State private var loaded = false
     
-    @State private var selectedImage: UIImage?
+    @StateObject private var viewModel = StoreDetailsViewModel()
     @State private var showImagePicker = false
     @State private var showSheet = false
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    
+    @State private var isLoading = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -65,34 +67,53 @@ struct ClothDetailView: View {
                 }
                 
                 Spacer()
-                
-                Button(action: {
-                    showSheet = true
-                }) {
-                    Text("Try it on")
-                        .foregroundColor(.white)
+                if isLoading {
+                    ProgressView()
                         .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.pink)
-                        .cornerRadius(10)
+                } else {
+                    Button(action: {
+                        showImagePicker = true
+                    }) {
+                        Text("Try it on")
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.pink)
+                            .cornerRadius(10)
+                    }.padding(.top)
                 }
-                .padding(.top)
+                
             }
             .padding()
-            .confirmationDialog("Select Image Source", isPresented: $showSheet, titleVisibility: .visible) {
-                Button("Camera") {
-                    sourceType = .camera
-                    showImagePicker = true
-                }
-                Button("Gallery") {
-                    sourceType = .photoLibrary
-                    showImagePicker = true
-                }
-                Button("Cancel", role: .cancel) { }
-            }
             .sheet(isPresented: $showImagePicker) {
-                ImagePicker(sourceType: sourceType, selectedImage: $selectedImage)
+                LoadPersonView(onImageSelect: { personModel in
+                    viewModel.selectedPersonModel = personModel
+                    inferImage()
+                })
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
             }
+            .sheet(isPresented: $viewModel.showError) {
+                ErrorSheetView(message: viewModel.errorMessage ?? "") {
+                    viewModel.showError = false
+                }
+            }
+            .sheet(isPresented: $showSheet) {
+                if let inferedClothModel = viewModel.inferedClothModel {
+                    StoreImageInferenceView(clothModel: inferedClothModel)
+                        .presentationDetents([.medium, .large])
+                        .presentationDragIndicator(.visible)
+                }
+            }
+        }
+    }
+    
+    func inferImage() {
+        isLoading = true
+        Task {
+            await viewModel.inferImage(clothImage: clothModel.fileName)
+            isLoading = false
+            showSheet = true
         }
     }
 }

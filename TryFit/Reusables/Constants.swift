@@ -11,5 +11,5 @@ final class Constants {
     
     private init() {}
     
-    var BASE_URL = "https://1686-34-87-110-108.ngrok-free.app"
+    var BASE_URL = "https://11cc-34-126-76-215.ngrok-free.app"
 }

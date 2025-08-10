@@ -13,6 +13,8 @@ import UIKit
 struct ImagePicker: UIViewControllerRepresentable {
     var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @Binding var selectedImage: UIImage?
+    @Binding var fileName: String?
+    var onImagePicked: (() -> Void)? = nil
     @Environment(\.dismiss) var dismiss
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
@@ -25,13 +27,16 @@ struct ImagePicker: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        Coordinator(self, onImagePicked: onImagePicked)
     }
     
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         let parent: ImagePicker
-        init(_ parent: ImagePicker) {
+        let onImagePicked: (() -> Void)?
+
+        init(_ parent: ImagePicker, onImagePicked: (() -> Void)?) {
             self.parent = parent
+            self.onImagePicked = onImagePicked
         }
         
         func imagePickerController(_ picker: UIImagePickerController,
@@ -39,10 +44,17 @@ struct ImagePicker: UIViewControllerRepresentable {
             if let image = info[.originalImage] as? UIImage {
                 parent.selectedImage = image
             }
+
+            if let imageURL = info[.imageURL] as? URL {
+                print("File name: \(imageURL.lastPathComponent)")
+                parent.fileName = imageURL.lastPathComponent // ← Capture file name
+            }
+
             parent.dismiss()
         }
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            self.onImagePicked?()
             parent.dismiss()
         }
     }
